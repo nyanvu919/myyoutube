@@ -1431,3 +1431,445 @@ function checkAuthStatus() {
 // Gọi hàm kiểm tra khi tải trang
 checkAuthStatus();
 
+
+// Thêm sau phần window.addEventListener('load', ...)
+window.addEventListener('load', () => {
+    // ... code hiện tại ...
+    
+    // Thêm sự kiện cho nút Plan
+    document.getElementById('planBtn')?.addEventListener('click', showPlanModal);
+    
+    // Thêm sự kiện cho nút Export
+    document.getElementById('exportJson')?.addEventListener('click', handleExportJson);
+    document.getElementById('exportCSV')?.addEventListener('click', handleExportCSV);
+    document.getElementById('exportPDF')?.addEventListener('click', handleExportPDF);
+});
+
+// ============================================
+// HÀM XỬ LÝ PLAN MODAL
+// ============================================
+function showPlanModal() {
+    const modal = document.createElement('div');
+    modal.id = 'plan-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    `;
+    
+    modal.innerHTML = `
+        <div class="plan-container" style="
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        ">
+            <button onclick="closePlanModal()" style="
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: #666;
+            ">×</button>
+            
+            <h2 style="color:#ff0000; margin-bottom:20px; text-align:center;">
+                <i class="fas fa-crown"></i> UPGRADE YOUR PLAN
+            </h2>
+            
+            <div style="text-align:center; margin-bottom:30px;">
+                <div style="
+                    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+                    color: #d63031;
+                    padding: 15px 30px;
+                    border-radius: 25px;
+                    font-weight: bold;
+                    font-size: 18px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-bottom: 15px;
+                ">
+                    <i class="fas fa-gift"></i> 
+                    CURRENT STATUS: FREE TRIAL (3 DAYS REMAINING)
+                </div>
+                <p style="color:#666;">Upgrade now to unlock all features and remove limitations!</p>
+            </div>
+            
+            <div class="plan-options">
+                <div class="plan-option">
+                    <h3 style="color:#3498db;">BASIC</h3>
+                    <div class="price">35.000đ</div>
+                    <div class="period">per month</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> 100 requests/day</li>
+                        <li><i class="fas fa-check"></i> Basic analytics</li>
+                        <li><i class="fas fa-check"></i> JSON export</li>
+                        <li><i class="fas fa-times" style="color:#e74c3c;"></i> No CSV export</li>
+                        <li><i class="fas fa-times" style="color:#e74c3c;"></i> No PDF export</li>
+                    </ul>
+                    <button onclick="selectPlan('basic')" style="
+                        width: 100%;
+                        padding: 12px;
+                        background: #3498db;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">
+                        Select Basic
+                    </button>
+                </div>
+                
+                <div class="plan-option recommended">
+                    <h3 style="color:#9b59b6;">PRO</h3>
+                    <div class="price">100.000đ</div>
+                    <div class="period">per month</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Unlimited requests</li>
+                        <li><i class="fas fa-check"></i> Advanced analytics</li>
+                        <li><i class="fas fa-check"></i> JSON export</li>
+                        <li><i class="fas fa-check"></i> CSV export</li>
+                        <li><i class="fas fa-check"></i> PDF export</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                    </ul>
+                    <button onclick="selectPlan('pro')" style="
+                        width: 100%;
+                        padding: 12px;
+                        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">
+                        Select Pro
+                    </button>
+                </div>
+                
+                <div class="plan-option">
+                    <h3 style="color:#2ecc71;">YEARLY</h3>
+                    <div class="price">350.000đ</div>
+                    <div class="period">per year (Save 30%)</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> All Pro features</li>
+                        <li><i class="fas fa-check"></i> Save 30%</li>
+                        <li><i class="fas fa-check"></i> Early access to new features</li>
+                        <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                    </ul>
+                    <button onclick="selectPlan('yearly')" style="
+                        width: 100%;
+                        padding: 12px;
+                        background: #2ecc71;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">
+                        Select Yearly
+                    </button>
+                </div>
+                
+                <div class="plan-option">
+                    <h3 style="color:#e74c3c;">LIFETIME</h3>
+                    <div class="price">1.500.000đ</div>
+                    <div class="period">one-time payment</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> All features forever</li>
+                        <li><i class="fas fa-check"></i> No monthly fees</li>
+                        <li><i class="fas fa-check"></i> Lifetime updates</li>
+                        <li><i class="fas fa-check"></i> VIP support</li>
+                    </ul>
+                    <button onclick="selectPlan('lifetime')" style="
+                        width: 100%;
+                        padding: 12px;
+                        background: #e74c3c;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">
+                        Select Lifetime
+                    </button>
+                </div>
+            </div>
+            
+            <div style="
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 10px;
+                margin-top: 30px;
+                border-left: 4px solid #667eea;
+            ">
+                <h4 style="color:#667eea; margin-bottom:10px;">
+                    <i class="fas fa-credit-card"></i> PAYMENT METHODS
+                </h4>
+                <div style="
+                    background: white;
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin: 10px 0;
+                ">
+                    <p>🏦 <strong>MB Bank (MBBank)</strong></p>
+                    <p>📝 <strong>Account Number:</strong> <code style="background:#e9ecef; padding:2px 6px; border-radius:4px;">123456789</code></p>
+                    <p>👤 <strong>Account Holder:</strong> NGUYEN VAN A</p>
+                    <p>💬 <strong>Transfer Content:</strong> <code style="background:#e9ecef; padding:2px 6px; border-radius:4px;">${currentUser ? 'Upgrade ' + currentUser.username : 'UPGRADE'} [PLAN_NAME]</code></p>
+                </div>
+                
+                <p style="margin: 15px 0;">
+                    <i class="fab fa-paypal" style="color:#003087;"></i> <strong>PayPal:</strong> support@youtube-extractor.com<br>
+                    <i class="fab fa-bitcoin" style="color:#f7931a;"></i> <strong>Crypto:</strong> Available upon request
+                </p>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function closePlanModal() {
+    const modal = document.getElementById('plan-modal');
+    if (modal) modal.remove();
+}
+
+function selectPlan(planType) {
+    const planNames = {
+        'basic': 'Basic',
+        'pro': 'Pro',
+        'yearly': 'Yearly Pro',
+        'lifetime': 'Lifetime'
+    };
+    
+    alert(`You selected ${planNames[planType]} plan. Please complete the payment to activate.`);
+    closePlanModal();
+}
+
+// ============================================
+// HÀM XỬ LÝ EXPORT
+// ============================================
+function handleExportJson() {
+    if (!fullVideoData) {
+        alert('Please get video information first!');
+        return;
+    }
+    
+    try {
+        downloadRawData(); // Sử dụng hàm có sẵn
+    } catch (error) {
+        alert('Error exporting JSON: ' + error.message);
+    }
+}
+
+function handleExportCSV() {
+    if (!fullVideoData) {
+        alert('Please get video information first!');
+        return;
+    }
+    
+    try {
+        exportToCSV();
+    } catch (error) {
+        alert('Error exporting CSV: ' + error.message);
+    }
+}
+
+function handleExportPDF() {
+    if (!fullVideoData) {
+        alert('Please get video information first!');
+        return;
+    }
+    
+    try {
+        exportToPDF();
+    } catch (error) {
+        alert('Error exporting PDF: ' + error.message);
+    }
+}
+
+function exportToCSV() {
+    const data = fullVideoData;
+    const csvRows = [];
+    
+    // Thêm thông tin cơ bản
+    csvRows.push(['Field', 'Value']);
+    csvRows.push(['Video ID', data.id]);
+    csvRows.push(['Title', data.snippet?.title || '']);
+    csvRows.push(['Description', data.snippet?.description || '']);
+    csvRows.push(['Channel Title', data.snippet?.channelTitle || '']);
+    csvRows.push(['Published At', data.snippet?.publishedAt || '']);
+    csvRows.push(['Category ID', data.snippet?.categoryId || '']);
+    
+    // Thêm thống kê
+    if (data.statistics) {
+        csvRows.push(['', '']);
+        csvRows.push(['STATISTICS', '']);
+        csvRows.push(['View Count', data.statistics.viewCount || 0]);
+        csvRows.push(['Like Count', data.statistics.likeCount || 0]);
+        csvRows.push(['Dislike Count', data.statistics.dislikeCount || 0]);
+        csvRows.push(['Comment Count', data.statistics.commentCount || 0]);
+    }
+    
+    // Thêm content details
+    if (data.contentDetails) {
+        csvRows.push(['', '']);
+        csvRows.push(['CONTENT DETAILS', '']);
+        csvRows.push(['Duration', data.contentDetails.duration || '']);
+        csvRows.push(['Dimension', data.contentDetails.dimension || '']);
+        csvRows.push(['Definition', data.contentDetails.definition || '']);
+        csvRows.push(['Caption', data.contentDetails.caption || '']);
+    }
+    
+    // Chuyển thành CSV string
+    const csvContent = csvRows.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+    
+    // Tạo blob và download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `youtube_data_${data.id}_${Date.now()}.csv`;
+    link.click();
+}
+
+function exportToPDF() {
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        const data = fullVideoData;
+        let yPos = 20;
+        
+        // Title
+        doc.setFontSize(20);
+        doc.setTextColor(255, 0, 0);
+        doc.text('YouTube Video Information', 20, yPos);
+        
+        yPos += 10;
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        
+        // Basic Info
+        doc.setFont(undefined, 'bold');
+        doc.text('BASIC INFORMATION', 20, yPos);
+        yPos += 10;
+        doc.setFont(undefined, 'normal');
+        
+        doc.text(`Video ID: ${data.id}`, 20, yPos);
+        yPos += 7;
+        doc.text(`Title: ${data.snippet?.title || ''}`, 20, yPos);
+        yPos += 7;
+        doc.text(`Channel: ${data.snippet?.channelTitle || ''}`, 20, yPos);
+        yPos += 7;
+        doc.text(`Published: ${data.snippet?.publishedAt || ''}`, 20, yPos);
+        
+        // Thêm trang mới nếu cần
+        if (yPos > 250) {
+            doc.addPage();
+            yPos = 20;
+        }
+        
+        yPos += 10;
+        
+        // Statistics
+        if (data.statistics) {
+            doc.setFont(undefined, 'bold');
+            doc.text('STATISTICS', 20, yPos);
+            yPos += 10;
+            doc.setFont(undefined, 'normal');
+            
+            doc.text(`Views: ${data.statistics.viewCount || 0}`, 20, yPos);
+            yPos += 7;
+            doc.text(`Likes: ${data.statistics.likeCount || 0}`, 20, yPos);
+            yPos += 7;
+            doc.text(`Comments: ${data.statistics.commentCount || 0}`, 20, yPos);
+        }
+        
+        // Footer
+        doc.setFontSize(10);
+        doc.setTextColor(128, 128, 128);
+        doc.text(`Generated by YouTube Info Extractor - ${new Date().toLocaleString()}`, 20, 280);
+        
+        // Save PDF
+        doc.save(`youtube_data_${data.id}_${Date.now()}.pdf`);
+        
+    } catch (error) {
+        console.error('PDF export error:', error);
+        alert('PDF export requires jsPDF library. Please check if it is loaded.');
+    }
+}
+
+// ============================================
+// CẬP NHẬT HÀM updateUIForLoggedInUser
+// ============================================
+function updateUIForLoggedInUser() {
+    // Ẩn ô API Key nếu đã đăng nhập (vì dùng backend)
+    const apiKeyContainer = apiKeyInput.parentElement;
+    if (apiKeyContainer) apiKeyContainer.style.display = 'none';
+    
+    // Thêm nút logout vào header
+    const header = document.querySelector('.header');
+    if (header) {
+        // Kiểm tra nếu đã có nút logout thì không thêm nữa
+        if (!document.querySelector('.btn-logout')) {
+            const logoutBtn = document.createElement('button');
+            logoutBtn.className = "btn-logout";
+            logoutBtn.innerHTML = `
+                <i class="fas fa-user-circle"></i> ${currentUser.username}
+                <i class="fas fa-sign-out-alt" style="margin-left: 8px;"></i>
+            `;
+            logoutBtn.style.cssText = `
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+                transition: all 0.3s ease;
+            `;
+            logoutBtn.onmouseover = () => {
+                logoutBtn.style.transform = 'translateY(-2px)';
+                logoutBtn.style.boxShadow = '0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08)';
+            };
+            logoutBtn.onmouseout = () => {
+                logoutBtn.style.transform = 'translateY(0)';
+                logoutBtn.style.boxShadow = '0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08)';
+            };
+            logoutBtn.onclick = handleLogout;
+            
+            // Điều chỉnh vị trí cho plan-info
+            const planInfo = document.querySelector('.plan-info');
+            if (planInfo) {
+                planInfo.style.right = '120px';
+            }
+            
+            header.style.position = "relative";
+            header.appendChild(logoutBtn);
+        }
+    }
+}
+
