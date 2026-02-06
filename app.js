@@ -1873,3 +1873,150 @@ function updateUIForLoggedInUser() {
     }
 }
 
+// ============================================
+// 10. HÀM HIỂN THỊ GÓI ĐĂNG KÝ
+// ============================================
+
+// Thêm sự kiện cho nút Plan
+document.addEventListener('DOMContentLoaded', function() {
+    const planBtn = document.getElementById('planBtn');
+    if (planBtn) {
+        planBtn.addEventListener('click', showPlanModal);
+    }
+});
+
+function showPlanModal() {
+    // Tạo modal hiển thị các gói
+    const modal = document.createElement('div');
+    modal.id = 'plan-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    `;
+    
+    modal.innerHTML = `
+        <div class="plan-container" style="
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        ">
+            <h2 style="color:#ff0000; margin-bottom:10px;">
+                <i class="fas fa-crown"></i> NÂNG CẤP TÀI KHOẢN
+            </h2>
+            <p style="margin-bottom:20px; color:#666;">
+                Chọn gói phù hợp để sử dụng không giới hạn
+            </p>
+            
+            <div style="display: flex; gap: 20px; justify-content: center; margin: 30px 0; flex-wrap: wrap;">
+                <div style="
+                    background: white;
+                    padding: 25px;
+                    border: 3px solid #ff6b6b;
+                    border-radius: 15px;
+                    width: 180px;
+                    box-shadow: 0 5px 15px rgba(255,107,107,0.2);
+                    transition: transform 0.3s;
+                " onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <h3 style="color:#ff6b6b; margin-bottom:10px;">GÓI THÁNG</h3>
+                    <div style="font-size: 24px; font-weight: bold; color:#ff6b6b;">35.000đ</div>
+                    <p style="font-size: 12px; color:#666; margin-top:10px;">/ tháng</p>
+                    <button onclick="selectPlan('monthly')" style="
+                        margin-top: 15px;
+                        padding: 10px 20px;
+                        background: #ff6b6b;
+                        color: white;
+                        border: none;
+                        border-radius: 25px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">
+                        Chọn gói
+                    </button>
+                </div>
+                
+                <div style="
+                    background: white;
+                    padding: 25px;
+                    border: 3px solid #4ecdc4;
+                    border-radius: 15px;
+                    width: 180px;
+                    box-shadow: 0 5px 15px rgba(78,205,196,0.2);
+                    transition: transform 0.3s;
+                " onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <h3 style="color:#4ecdc4; margin-bottom:10px;">GÓI NĂM</h3>
+                    <div style="font-size: 24px; font-weight: bold; color:#4ecdc4;">350.000đ</div>
+                    <p style="font-size: 12px; color:#666; margin-top:10px;">/ năm (Tiết kiệm 16%)</p>
+                    <button onclick="selectPlan('yearly')" style="
+                        margin-top: 15px;
+                        padding: 10px 20px;
+                        background: #4ecdc4;
+                        color: white;
+                        border: none;
+                        border-radius: 25px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">
+                        Chọn gói
+                    </button>
+                </div>
+            </div>
+            
+            <div style="
+                background: #f8f9fa;
+                padding: 15px;
+                border-radius: 10px;
+                margin: 20px 0;
+                text-align: left;
+            ">
+                <h4 style="color:#667eea; margin-bottom:10px;">
+                    <i class="fas fa-credit-card"></i> THÔNG TIN THANH TOÁN
+                </h4>
+                <p><strong>Ngân hàng:</strong> MB Bank (MBBank)</p>
+                <p><strong>Số TK:</strong> 123456789</p>
+                <p><strong>Chủ TK:</strong> NGUYEN VAN A</p>
+                <p><strong>Nội dung:</strong> [Tên đăng nhập] [Gói đăng ký]</p>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button onclick="closePlanModal()" style="
+                    padding: 12px 30px;
+                    background: #6c757d;
+                    color: white;
+                    border: none;
+                    border-radius: 25px;
+                    cursor: pointer;
+                ">
+                    <i class="fas fa-times"></i> Đóng
+                </button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function closePlanModal() {
+    const modal = document.getElementById('plan-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function selectPlan(planType) {
+    const planName = planType === 'monthly' ? 'tháng (35.000đ)' : 'năm (350.000đ)';
+    const username = currentUser ? currentUser.username : 'tên đăng nhập của bạn';
+    
+    alert(`Bạn đã chọn gói ${planName}\n\nVui lòng chuyển khoản với nội dung:\n"${username} ${planType}"\n\nSau khi chuyển khoản, vui lòng liên hệ qua Zalo: 0123.456.789 để được kích hoạt.`);
+    closePlanModal();
+}
