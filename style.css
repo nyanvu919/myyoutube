@@ -1274,3 +1274,23 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+/* Thêm style cho nút Plan và modal */
+.btn-plan:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 15px rgba(255, 126, 95, 0.3);
+}
+
+.plan-container {
+    animation: fadeIn 0.5s ease;
+}
+
+@media (max-width: 768px) {
+    .plan-section {
+        padding: 12px;
+    }
+    
+    .btn-plan {
+        width: 100%;
+        justify-content: center;
+    }
+}
