@@ -10,25 +10,13 @@
 <body>
     <div class="container">
         <!-- HEADER -->
-      <div class="header">
-    <div class="logo">
-        <i class="fab fa-youtube"></i>
-        <h1>YouTube Info Extractor</h1>
-    </div>
-    
-    <!-- THÊM PHẦN NÀY VÀO -->
-    <div class="plan-info">
-        <div class="free-trial-badge">
-            <i class="fas fa-gift"></i> FREE 3 DAYS
+        <div class="header">
+            <div class="logo">
+                <i class="fab fa-youtube"></i>
+                <h1>YouTube Info Extractor</h1>
+            </div>
+            <p class="subtitle">Dán link YouTube để lấy toàn bộ thông tin video</p>
         </div>
-        <button id="planBtn" class="btn-plan">
-            <i class="fas fa-crown"></i> UPGRADE PLAN
-        </button>
-    </div>
-    <!-- KẾT THÚC PHẦN THÊM -->
-    
-    <p class="subtitle">Dán link YouTube để lấy toàn bộ thông tin video</p>
-</div>
 
         <!-- MAIN CONTENT -->
         <div class="main">
@@ -52,17 +40,35 @@
                     <i class="fas fa-search"></i> LẤY THÔNG TIN
                 </button>
                 
-                <div class="export-buttons">
-                    <button id="exportJson" class="btn-secondary">
-                        <i class="fas fa-file-export"></i> Xuất JSON
-                    </button>
-                    <button id="exportCSV" class="btn-secondary">
-                        <i class="fas fa-file-csv"></i> Xuất CSV
-                    </button>
-                    <button id="exportPDF" class="btn-secondary">
-                        <i class="fas fa-file-pdf"></i> Xuất PDF
-                    </button>
-                </div>
+                <!-- THÊM DÒNG FREE 3 DAYS VÀ NÚT PLAN -->
+<div class="plan-section" style="
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #fff9e6 0%, #fff0cc 100%);
+    border-radius: 12px;
+    border: 2px solid #ffc107;
+">
+    <p style="color: #ff0000; font-weight: bold; margin-bottom: 10px;">
+        <i class="fas fa-crown"></i> Dùng thử miễn phí 3 ngày
+    </p>
+    <button id="planBtn" class="btn-plan" style="
+        background: linear-gradient(to right, #ff7e5f, #feb47b);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s;
+    ">
+        <i class="fas fa-gem"></i> Nâng cấp gói
+    </button>
+</div>
             </div>
 
             <!-- LOADING -->
